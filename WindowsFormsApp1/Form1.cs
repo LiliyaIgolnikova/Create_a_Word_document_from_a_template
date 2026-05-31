@@ -65,12 +65,21 @@ namespace WindowsFormsApp1
                     wordDocument.SaveAs2(outputPath);
                     wordApp.DisplayAlerts = Word.WdAlertLevel.wdAlertsAll;
                     MessageBox.Show($"Документ успешно сохранён:\n{outputPath}", "Готово", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    wordApp.Visible = true;
-                    wordDocument.Activate();
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                if (wordDocument != null)
+                {
+                    wordDocument.Close(false);
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(wordDocument);
+                }
+                if (wordApp != null)
+                {
+                    if (!wordApp.Visible)
+                        wordApp.Quit();
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(wordApp);
                 }
             }
             else
